@@ -1,6 +1,4 @@
-import { Accommodation } from '../types';
-
-export const accommodations: Accommodation[] = [
+export const accommodations = [
   {
     id: '1',
     type: 'singleRoom',

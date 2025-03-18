@@ -1,17 +1,15 @@
-import { Program, ServiceFees } from '../types';
+export const countries = ['France', 'Russie', 'Canada', 'Belgique'];
 
-export const countries = ['France', 'Russie', 'Canada', 'Belgique'] as const;
-
-export const levels = ['License', 'Master', 'Doctorat'] as const;
+export const levels = ['License', 'Master', 'Doctorat'];
 
 export const fields = {
   'Médecine': ['Médecine Générale', 'Chirurgie', 'Pédiatrie'],
   'Ingénierie': ['Informatique', 'Mécanique', 'Électrique', 'Civil'],
   'Pharmacie': ['Pharmacie Industrielle', 'Pharmacie Clinique'],
   'Commerce': ['Finance', 'Marketing', 'Management']
-} as const;
+};
 
-export const serviceFees: ServiceFees = {
+export const serviceFees = {
   passportAssistance: 300,
   diplomaTranslation: 200,
   airportPickup: 150,
@@ -19,7 +17,7 @@ export const serviceFees: ServiceFees = {
   studentInsurance: 500
 };
 
-export const programs: Program[] = [
+export const programs = [
   {
     id: '1',
     city: 'Paris',
@@ -43,14 +41,7 @@ export const programs: Program[] = [
       hasRussianContact: false,
       needAirportPickup: false,
       needYearlyAssistance: true
-    },
-    totalFees: {
-        tuition: 9500,
-        serviceFees: serviceFees.yearlyAssistance, // Seul service activé par défaut
-        accommodation: 800 * 10, // 800€/mois × 10 mois
-        insurance: serviceFees.studentInsurance,
-        total: 9500 + (800 * 10) + serviceFees.studentInsurance + serviceFees.yearlyAssistance
-      }
+    }
   },
   {
     id: '2',
@@ -75,14 +66,7 @@ export const programs: Program[] = [
       hasRussianContact: false,
       needAirportPickup: false,
       needYearlyAssistance: true
-    },
-    totalFees: {
-        tuition: 8500,
-        serviceFees: serviceFees.yearlyAssistance,
-        accommodation: 600 * 10,
-        insurance: serviceFees.studentInsurance,
-        total: 8500 + (600 * 10) + serviceFees.studentInsurance + serviceFees.yearlyAssistance
-      }
+    }
   },
   {
     id: '3',
@@ -107,13 +91,6 @@ export const programs: Program[] = [
       hasRussianContact: false,
       needAirportPickup: false,
       needYearlyAssistance: true
-    },
-    totalFees: {
-        tuition: 6000,
-        serviceFees: serviceFees.yearlyAssistance,
-        accommodation: 400 * 10,
-        insurance: serviceFees.studentInsurance,
-        total: 6000 + (400 * 10) + serviceFees.studentInsurance + serviceFees.yearlyAssistance
-      }
+    }
   }
 ];

@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, ChevronLeft, ChevronRight } from 'lucide-react';
 import { StudentForm } from './components/StudentForm';
 import { ProgramSelection } from './components/ProgramSelection';
 import { AccommodationSelection } from './components/AccommodationSelection';
 import { ProgramDetails } from './components/ProgramDetails';
 import { RegistrationSummary } from './components/RegistrationSummary';
-import type { Student, Program, Accommodation, Registration } from './types';
 import { useLanguage } from './contexts/LanguageContext';
 import { LanguageSwitch } from './components/LanguageSwitch';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { serviceFees } from './data/programs';
 
 function App() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [registration, setRegistration] = useState<Partial<Registration>>({});
+  const [registration, setRegistration] = useState({});
   const [runningTotal, setRunningTotal] = useState(0);
   const { t } = useLanguage();
-  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [selectedProgram, setSelectedProgram] = useState(null);
 
   const canGoBack = currentStep > 1;
   const canGoForward = () => {
@@ -34,27 +32,27 @@ function App() {
     }
   };
 
-  const goToStep = (step: number) => {
+  const goToStep = (step) => {
     if (step >= 1 && step <= 5 && (step < currentStep || canGoForward())) {
       setCurrentStep(step);
     }
   };
 
-  const handleStudentSubmit = (student: Student) => {
+  const handleStudentSubmit = (student) => {
     setRegistration(prev => ({ ...prev, student }));
     setCurrentStep(2);
   };
 
-  const handleProgramPreSelect = (program: Program) => {
+  const handleProgramPreSelect = (program) => {
     setRunningTotal(program.tuitionFee);
     setSelectedProgram(program);
     setCurrentStep(3);
   };
 
-  const handleAccommodationSelect = (accommodation: Accommodation, roommateCount: number) => {
+  const handleAccommodationSelect = (accommodation, roommateCount) => {
     const monthlyAccommodationFee = Math.round(accommodation.basePrice / roommateCount);
     const accommodationTotal = monthlyAccommodationFee * 10; // 10 mois
-    setRunningTotal(prev => prev + accommodationTotal); // 10 months
+    setRunningTotal(prev => prev + accommodationTotal);
     
     setRegistration(prev => ({ 
       ...prev, 
@@ -76,7 +74,7 @@ function App() {
     setCurrentStep(4);
   };
 
-  const handleProgramFinalize = (program: Program) => {
+  const handleProgramFinalize = (program) => {
     // Calculate service fees based on selected services
     const serviceFeesTotal = (
       (program.additionalServices.needPassportAssistance ? serviceFees.passportAssistance : 0) +
@@ -195,25 +193,25 @@ function App() {
               </div>
 
               <div className="bg-white shadow rounded-lg">
-
                 <div className="px-4 py-5 sm:p-6">
                   {currentStep === 1 && <StudentForm onSubmit={handleStudentSubmit} initialData={registration.student} />}
                   {currentStep === 2 && <ProgramSelection onSelect={handleProgramPreSelect} />}
                   {currentStep === 3 && (
                     <AccommodationSelection 
-                      program={selectedProgram!}
+                      program={selectedProgram}
                       onSelect={handleAccommodationSelect}
                     />
                   )}
                   {currentStep === 4 && selectedProgram && (
                     <ProgramDetails
                       program={selectedProgram}
+                      registration={registration}
                       onComplete={handleProgramFinalize}
                     />
                   )}
-                  {currentStep === 5 && registration.student && registration.program && registration.accommodation && (
+                  {currentStep === 5 && (
                     <RegistrationSummary
-                      registration={registration as Registration}
+                      registration={registration}
                       onDownload={handleDownload}
                       onRestart={handleRestart}
                       onBack={() => setCurrentStep(4)}

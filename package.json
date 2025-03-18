@@ -12,14 +12,13 @@
   "dependencies": {
     "@types/react-datepicker": "^7.0.0",
     "lucide-react": "^0.477.0",
+    "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-datepicker": "^8.2.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.16",
     "eslint": "^9.21.0",
@@ -28,7 +27,6 @@
     "globals": "^15.15.0",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.4.1",
-    "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"
   }

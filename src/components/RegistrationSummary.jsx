@@ -1,16 +1,9 @@
 import React from 'react';
-import { Registration } from '../types';
+import PropTypes from 'prop-types';
 import { FileDown, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
-interface Props {
-  registration: Registration;
-  onDownload: () => void;
-  onRestart: () => void;
-  onBack: () => void;
-}
-
-export function RegistrationSummary({ registration, onDownload, onRestart, onBack }: Props) {
+export function RegistrationSummary({ registration, onDownload, onRestart, onBack }) {
   const { t } = useLanguage();
 
   return (
@@ -168,5 +161,42 @@ export function RegistrationSummary({ registration, onDownload, onRestart, onBac
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+RegistrationSummary.propTypes = {
+  registration: PropTypes.shape({
+    student: PropTypes.shape({
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      birthDate: PropTypes.string,
+      birthPlace: PropTypes.string,
+      email: PropTypes.string,
+      phone: PropTypes.string
+    }),
+    program: PropTypes.shape({
+      field: PropTypes.string,
+      subField: PropTypes.string,
+      university: PropTypes.string,
+      city: PropTypes.string,
+      country: PropTypes.string,
+      duration: PropTypes.string
+    }),
+    accommodation: PropTypes.shape({
+      type: PropTypes.string
+    }),
+    roommateCount: PropTypes.number,
+    totalFees: PropTypes.shape({
+      tuition: PropTypes.number,
+      accommodation: PropTypes.number,
+      insurance: PropTypes.number,
+      services: PropTypes.number,
+      total: PropTypes.number
+    })
+  }).isRequired,
+  onDownload: PropTypes.func.isRequired,
+  onRestart: PropTypes.func.isRequired,
+  onBack: PropTypes.func.isRequired
+};
+
+export default RegistrationSummary;

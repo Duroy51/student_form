@@ -1,19 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import { translations } from '../i18n/translations';
 
-type Language = 'en' | 'fr';
-type Translations = typeof translations.en;
+const LanguageContext = createContext();
 
-interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: Translations;
-}
-
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>('fr');
+export function LanguageProvider({ children }) {
+  const [language, setLanguage] = useState('fr');
 
   const value = {
     language,
@@ -27,6 +19,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     </LanguageContext.Provider>
   );
 }
+
+LanguageProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export function useLanguage() {
   const context = useContext(LanguageContext);

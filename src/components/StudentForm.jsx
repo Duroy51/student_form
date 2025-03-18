@@ -1,30 +1,25 @@
-import React from 'react';
-import { Student } from '../types';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Calendar, Phone } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { countries } from '../data/countries';
 
-interface Props {
-  onSubmit: (student: Student) => void;
-  initialData?: Partial<Student>;
-}
-
-export function StudentForm({ onSubmit, initialData }: Props) {
+export function StudentForm({ onSubmit, initialData = {} }) {
   const { t, language } = useLanguage();
-  const [errors, setErrors] = React.useState<Partial<Record<keyof Student, string>>>({});
-  const [formData, setFormData] = React.useState<Student>({
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
     country: 'CM',
-    firstName: initialData?.firstName || '',
-    lastName: initialData?.lastName || '',
-    birthDate: initialData?.birthDate || '',
-    birthPlace: initialData?.birthPlace || '',
-    phone: initialData?.phone || '',
-    email: initialData?.email || '',
-    parentName: initialData?.parentName || '',
-    parentContact: initialData?.parentContact || ''
+    firstName: initialData.firstName || '',
+    lastName: initialData.lastName || '',
+    birthDate: initialData.birthDate || '',
+    birthPlace: initialData.birthPlace || '',
+    phone: initialData.phone || '',
+    email: initialData.email || '',
+    parentName: initialData.parentName || '',
+    parentContact: initialData.parentContact || ''
   });
 
-  const validateField = (name: keyof Student, value: string): string => {
+  const validateField = (name, value) => {
     switch (name) {
       case 'phone':
       case 'parentContact':
@@ -50,7 +45,6 @@ export function StudentForm({ onSubmit, initialData }: Props) {
         break;
       case 'birthDate':
         {
-          // Parse DD/MM/YYYY format
           const [day, month, year] = value.split('/').map(Number);
           if (!day || !month || !year) return '';
           
@@ -59,7 +53,6 @@ export function StudentForm({ onSubmit, initialData }: Props) {
           const minAge = new Date();
           minAge.setFullYear(now.getFullYear() - 15);
           
-          // Check if it's a valid date
           if (
             date.getDate() !== day ||
             date.getMonth() !== month - 1 ||
@@ -71,21 +64,21 @@ export function StudentForm({ onSubmit, initialData }: Props) {
           if (date > minAge) {
             return t.validation.tooYoung;
           }
-          break;
         }
+        break;
     }
     return '';
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors: Partial<Record<keyof Student, string>> = {};
+    const newErrors = {};
     
     Object.entries(formData).forEach(([key, value]) => {
       if (key !== 'country') {
-        const error = validateField(key as keyof Student, value);
+        const error = validateField(key, value);
         if (error) {
-          newErrors[key as keyof Student] = error;
+          newErrors[key] = error;
         }
       }
     });
@@ -97,10 +90,10 @@ export function StudentForm({ onSubmit, initialData }: Props) {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     
-    const error = validateField(name as keyof Student, value);
+    const error = validateField(name, value);
     setErrors(prev => ({
       ...prev,
       [name]: error
@@ -126,8 +119,7 @@ export function StudentForm({ onSubmit, initialData }: Props) {
     }
   };
 
-  // Helper function to format date string
-  const formatDateString = (digits: string): string => {
+  const formatDateString = (digits) => {
     let formattedDate = '';
     
     if (digits.length >= 2) {
@@ -210,24 +202,7 @@ export function StudentForm({ onSubmit, initialData }: Props) {
               onChange={(e) => {
                 const value = e.target.value;
                 const digits = value.replace(/\D/g, '');
-                
-                let formattedDate = '';
-                if (digits.length >= 2) {
-                  formattedDate = digits.substring(0, 2);
-                } else {
-                  formattedDate = digits;
-                }
-                if (digits.length >= 4) {
-                  formattedDate += '/' + digits.substring(2, 4);
-                } else if (digits.length > 2) {
-                  formattedDate += '/' + digits.substring(2);
-                }
-                if (digits.length >= 6) {
-                  formattedDate += '/' + digits.substring(4, 8);
-                } else if (digits.length > 4) {
-                  formattedDate += '/' + digits.substring(4);
-                }
-                
+                const formattedDate = formatDateString(digits);
                 if (formattedDate.length <= 10) {
                   setFormData(prev => ({ ...prev, birthDate: formattedDate }));
                 }
@@ -235,14 +210,13 @@ export function StudentForm({ onSubmit, initialData }: Props) {
               onKeyDown={(e) => {
                 if (e.key === 'Backspace') {
                   const { value, selectionStart } = e.currentTarget;
-                  if (value[selectionStart! - 1] === '/') {
+                  if (value[selectionStart - 1] === '/') {
                     e.preventDefault();
-                    const newValue = value.slice(0, selectionStart! - 2) + value.slice(selectionStart!);
+                    const newValue = value.slice(0, selectionStart - 2) + value.slice(selectionStart);
                     setFormData(prev => ({ ...prev, birthDate: newValue }));
                   }
                 }
                 
-                // Only allow numbers
                 if (!/^\d$/.test(e.key) || e.ctrlKey || e.altKey || e.metaKey) {
                   if (!['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
                     e.preventDefault();
@@ -263,9 +237,8 @@ export function StudentForm({ onSubmit, initialData }: Props) {
                 const newCursorPos = formattedDate.length;
                 
                 setFormData(prev => {
-                  // Use a callback to ensure we have access to the input after state update
                   requestAnimationFrame(() => {
-                    const input = document.getElementById('birthDate') as HTMLInputElement;
+                    const input = document.getElementById('birthDate');
                     if (input) {
                       input.setSelectionRange(newCursorPos, newCursorPos);
                     }
@@ -461,3 +434,19 @@ export function StudentForm({ onSubmit, initialData }: Props) {
     </form>
   );
 }
+
+StudentForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  initialData: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    birthDate: PropTypes.string,
+    birthPlace: PropTypes.string,
+    phone: PropTypes.string,
+    email: PropTypes.string,
+    parentName: PropTypes.string,
+    parentContact: PropTypes.string
+  })
+};
+
+export default StudentForm;

@@ -1,20 +1,14 @@
 import React from 'react';
-import { Program, AdditionalServices } from '../types';
+import PropTypes from 'prop-types';
 import { programs, countries, fields, serviceFees } from '../data/programs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { MapPin, Trophy, Clock, Briefcase } from 'lucide-react';
 
-type FieldKey = keyof typeof fields;
-
-interface Props {
-  onSelect: (program: Program) => void;
-}
-
-export function ProgramSelection({ onSelect }: Props) {
+export function ProgramSelection({ onSelect }) {
   const { t } = useLanguage();
   const [selectedCountry, setSelectedCountry] = React.useState('');
   const [selectedUniversity, setSelectedUniversity] = React.useState('');
-  const [selectedField, setSelectedField] = React.useState<FieldKey | ''>('');
+  const [selectedField, setSelectedField] = React.useState('');
   const [selectedSubField, setSelectedSubField] = React.useState('');
   const [selectedLevel, setSelectedLevel] = React.useState('');
   const [showDetails, setShowDetails] = React.useState(false);
@@ -86,7 +80,7 @@ export function ProgramSelection({ onSelect }: Props) {
               setSelectedSubField('');
               setSelectedLevel('');
             }}
-          className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg py-3"
+            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg py-3"
           >
             <option value="">{t.program.selectUniversity}</option>
             {availableUniversities.map(university => (
@@ -104,8 +98,8 @@ export function ProgramSelection({ onSelect }: Props) {
           <select
             id="field"
             value={selectedField}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-              setSelectedField(e.target.value as FieldKey);
+            onChange={(e) => {
+              setSelectedField(e.target.value);
               setSelectedSubField('');
               setSelectedLevel('');
             }}
@@ -165,15 +159,15 @@ export function ProgramSelection({ onSelect }: Props) {
             ))}
           </select>
           <button
-                onClick={() => setShowDetails(true)}
-                disabled={!selectedSubField} // Enable when specialization is selected
-                className={`mt-6 w-full py-4 px-6 rounded-lg font-medium text-xl ${
-                    selectedSubField 
-                        ? "bg-indigo-600 text-white hover:bg-indigo-700" 
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-           >
-                {t.program.showDetails}
+            onClick={() => setShowDetails(true)}
+            disabled={!selectedSubField}
+            className={`mt-6 w-full py-4 px-6 rounded-lg font-medium text-xl ${
+              selectedSubField 
+                ? "bg-indigo-600 text-white hover:bg-indigo-700" 
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            {t.program.showDetails}
           </button>
         </div>
       )}
@@ -251,3 +245,9 @@ export function ProgramSelection({ onSelect }: Props) {
     </div>
   );
 }
+
+ProgramSelection.propTypes = {
+  onSelect: PropTypes.func.isRequired
+};
+
+export default ProgramSelection;

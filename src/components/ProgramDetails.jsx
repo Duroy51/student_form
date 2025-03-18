@@ -1,23 +1,18 @@
-import React from 'react';
-import { Program, AdditionalServices } from '../types';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { serviceFees } from '../data/programs';
 import { useLanguage } from '../contexts/LanguageContext';
 
-interface Props {
-  program: Program;
-  onComplete: (program: Program) => void;
-}
-
-export function ProgramDetails({ program, onComplete }: Props) {
+export function ProgramDetails({ program, registration, onComplete }) {
   const { t } = useLanguage();
-  const [totalFees, setTotalFees] = React.useState({
+  const [totalFees, setTotalFees] = useState({
     tuition: program.tuitionFee,
-    accommodation: program.accommodationFee || 0,
+    accommodation: registration?.accommodationDetails?.yearlyFee || 0,
     insurance: serviceFees.studentInsurance,
     serviceFees: 0,
     total: 0
   });
-  const [additionalServices, setAdditionalServices] = React.useState<AdditionalServices>({
+  const [additionalServices, setAdditionalServices] = useState({
     hasPassport: false,
     needPassportAssistance: false,
     hasTranslatedDiplomas: false,
@@ -27,7 +22,7 @@ export function ProgramDetails({ program, onComplete }: Props) {
     needYearlyAssistance: true
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const servicesTotal = (
       (additionalServices.needPassportAssistance ? serviceFees.passportAssistance : 0) +
       (additionalServices.needTranslationService ? serviceFees.diplomaTranslation : 0) +
@@ -245,3 +240,35 @@ export function ProgramDetails({ program, onComplete }: Props) {
     </div>
   );
 }
+
+ProgramDetails.propTypes = {
+  program: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
+    university: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
+    subField: PropTypes.string.isRequired,
+    level: PropTypes.string.isRequired,
+    duration: PropTypes.string.isRequired,
+    ranking: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
+    careers: PropTypes.arrayOf(PropTypes.string).isRequired,
+    tuitionFee: PropTypes.number.isRequired,
+    accommodationFee: PropTypes.number,
+    availability: PropTypes.bool.isRequired,
+    additionalServices: PropTypes.shape({
+      hasPassport: PropTypes.bool,
+      needPassportAssistance: PropTypes.bool,
+      hasTranslatedDiplomas: PropTypes.bool,
+      needTranslationService: PropTypes.bool,
+      hasRussianContact: PropTypes.bool,
+      needAirportPickup: PropTypes.bool,
+      needYearlyAssistance: PropTypes.bool
+    })
+  }).isRequired,
+  registration: PropTypes.object,
+  onComplete: PropTypes.func.isRequired
+};
+
+export default ProgramDetails;

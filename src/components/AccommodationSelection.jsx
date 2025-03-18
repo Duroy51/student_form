@@ -1,25 +1,20 @@
-import React from 'react';
-import { Accommodation, Program } from '../types';
-import { accommodations } from '../data/accommodation';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { accommodations } from '../data/accommodation.js';
 import { Home } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
-interface Props {
-  program?: Program;
-  onSelect: (accommodation: Accommodation, roommateCount: number) => void;
-}
-
-export function AccommodationSelection({ program, onSelect }: Props) {
+export function AccommodationSelection({ program, onSelect }) {
   const { t } = useLanguage();
-  const [selectedAccommodation, setSelectedAccommodation] = React.useState<Accommodation | null>(null);
-  const [roommateCount, setRoommateCount] = React.useState(1);
+  const [selectedAccommodation, setSelectedAccommodation] = useState(null);
+  const [roommateCount, setRoommateCount] = useState(1);
 
-  const handleSelect = (accommodation: Accommodation) => {
+  const handleSelect = (accommodation) => {
     setSelectedAccommodation(accommodation);
     setRoommateCount(1);
   };
 
-  const calculatePrice = (accommodation: Accommodation) => {
+  const calculatePrice = (accommodation) => {
     if (!accommodation) return 0;
     return Math.round(accommodation.basePrice / (roommateCount || 1));
   };
@@ -28,7 +23,7 @@ export function AccommodationSelection({ program, onSelect }: Props) {
     <div className="space-y-6">
       <h3 className="text-xl font-semibold mb-4">{t.accommodation.selectType}</h3>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {accommodations.map((accommodation: Accommodation) => (
+        {accommodations.map((accommodation) => (
           <div
             key={accommodation.id}
             className={`relative rounded-lg border ${
@@ -121,3 +116,19 @@ export function AccommodationSelection({ program, onSelect }: Props) {
     </div>
   );
 }
+
+AccommodationSelection.propTypes = {
+  program: PropTypes.shape({
+    tuitionFee: PropTypes.number.isRequired
+  }),
+  onSelect: PropTypes.func.isRequired
+};
+
+AccommodationSelection.accommodationType = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(['singleRoom', 'doubleRoom', 'sharedApartment', 'studioApartment']).isRequired,
+  basePrice: PropTypes.number.isRequired,
+  maxRoommates: PropTypes.number.isRequired
+});
+
+export default AccommodationSelection;
