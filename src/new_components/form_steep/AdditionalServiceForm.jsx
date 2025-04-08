@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 
-export default function AdditionalServicesForm({ formData, handleChange, nextStep, prevStep }) {
+export default function AdditionalServicesForm({ formData, handleServiceToggle, nextStep, prevStep, services }) {
     return (
         <div className="space-y-6">
             <div>
@@ -9,73 +9,26 @@ export default function AdditionalServicesForm({ formData, handleChange, nextSte
                 <p className="text-sm text-gray-600 mb-6">Sélectionnez les services complémentaires dont vous avez besoin</p>
 
                 <div className="space-y-4">
-                    <div className="flex items-start p-4 border rounded-md">
-                        <input
-                            type="checkbox"
-                            id="needPassport"
-                            name="needPassport"
-                            checked={formData.needPassport}
-                            onChange={handleChange}
-                            className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mt-1"
-                        />
-                        <div className="ml-3">
-                            <label htmlFor="needPassport" className="font-medium text-gray-900">
-                                Besoin d'un passeport
-                            </label>
-                            <p className="text-sm text-gray-600">Nous pouvons vous aider à obtenir un passeport</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start p-4 border rounded-md">
-                        <input
-                            type="checkbox"
-                            id="needTranslation"
-                            name="needTranslation"
-                            checked={formData.needTranslation}
-                            onChange={handleChange}
-                            className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mt-1"
-                        />
-                        <div className="ml-3">
-                            <label htmlFor="needTranslation" className="font-medium text-gray-900">
-                                Service de traduction
-                            </label>
-                            <p className="text-sm text-gray-600">Traduction de vos certificats et diplômes</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start p-4 border rounded-md">
-                        <input
-                            type="checkbox"
-                            id="hasContact"
-                            name="hasContact"
-                            checked={formData.hasContact}
-                            onChange={handleChange}
-                            className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mt-1"
-                        />
-                        <div className="ml-3">
-                            <label htmlFor="hasContact" className="font-medium text-gray-900">
-                                Contact dans le pays
-                            </label>
-                            <p className="text-sm text-gray-600">Avez-vous un contact dans le pays choisi?</p>
-                        </div>
-                    </div>
-
-                    {formData.hasContact && (
-                        <div className="ml-8 mt-2">
-                            <label htmlFor="contactDetails" className="block text-sm font-medium text-gray-700 mb-1">
-                                Détails du contact
-                            </label>
-                            <textarea
-                                id="contactDetails"
-                                name="contactDetails"
-                                value={formData.contactDetails}
-                                onChange={handleChange}
-                                rows={3}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                placeholder="Nom, numéro de téléphone, adresse..."
+                    {services.map((service) => (
+                        <div key={service.id} className="flex items-start p-4 border rounded-md">
+                            <input
+                                type="checkbox"
+                                id={service.id}
+                                checked={formData.selectedServices.includes(service.id)}
+                                onChange={() => handleServiceToggle(service.id)}
+                                className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mt-1"
                             />
+                            <div className="ml-3 flex-1">
+                                <div className="flex justify-between">
+                                    <label htmlFor={service.id} className="font-medium text-gray-900">
+                                        {service.name}
+                                    </label>
+                                    <span className="text-indigo-600 font-medium">{service.price.toLocaleString()} FCFA</span>
+                                </div>
+                                <p className="text-sm text-gray-600">{service.description}</p>
+                            </div>
                         </div>
-                    )}
+                    ))}
                 </div>
             </div>
 
@@ -99,4 +52,8 @@ export default function AdditionalServicesForm({ formData, handleChange, nextSte
         </div>
     )
 }
+
+
+
+
 

@@ -1,9 +1,9 @@
-"use client"
+
+import React from 'react';
 
 import { useState } from "react"
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import PDFDocument from "../PDFDocument"
-import React from 'react';
 
 export default function SummaryForm({ formData, prevStep, mockData }) {
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -18,6 +18,24 @@ export default function SummaryForm({ formData, prevStep, mockData }) {
             setIsSubmitted(true)
         }, 1500)
     }
+
+    // Calculer le coût total des services sélectionnés
+    const calculateServicesCost = () => {
+        return formData.selectedServices.reduce((total, serviceId) => {
+            const service = mockData.additionalServices.find((s) => s.id === serviceId)
+            return total + (service ? service.price : 0)
+        }, 0)
+    }
+
+    // Obtenir les détails des services sélectionnés
+    const getSelectedServices = () => {
+        return formData.selectedServices
+            .map((serviceId) => mockData.additionalServices.find((s) => s.id === serviceId))
+            .filter(Boolean)
+    }
+
+    const selectedServices = getSelectedServices()
+    const servicesCost = calculateServicesCost()
 
     return (
         <div className="space-y-6">
@@ -102,40 +120,27 @@ export default function SummaryForm({ formData, prevStep, mockData }) {
 
                     <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
                         <h4 className="text-md font-medium text-gray-900 mb-3">Services Complémentaires</h4>
-                        <div className="space-y-2">
-                            <div className="flex items-center">
-                                <div
-                                    className={`h-5 w-5 rounded border ${formData.needPassport ? "bg-indigo-600 border-indigo-600" : "border-gray-300"} flex items-center justify-center`}
-                                >
-                                    {formData.needPassport && <span className="text-white text-xs">✓</span>}
-                                </div>
-                                <p className="ml-3">Besoin d'un passeport</p>
-                            </div>
 
-                            <div className="flex items-center">
-                                <div
-                                    className={`h-5 w-5 rounded border ${formData.needTranslation ? "bg-indigo-600 border-indigo-600" : "border-gray-300"} flex items-center justify-center`}
-                                >
-                                    {formData.needTranslation && <span className="text-white text-xs">✓</span>}
-                                </div>
-                                <p className="ml-3">Service de traduction</p>
-                            </div>
+                        {selectedServices.length > 0 ? (
+                            <div className="space-y-3">
+                                {selectedServices.map((service) => (
+                                    <div key={service.id} className="flex justify-between items-start p-3 border rounded-md bg-white">
+                                        <div>
+                                            <p className="font-medium text-gray-900">{service.name}</p>
+                                            <p className="text-sm text-gray-600">{service.description}</p>
+                                        </div>
+                                        <p className="font-medium text-indigo-600 ml-4">{service.price.toLocaleString()} FCFA</p>
+                                    </div>
+                                ))}
 
-                            <div className="flex items-center">
-                                <div
-                                    className={`h-5 w-5 rounded border ${formData.hasContact ? "bg-indigo-600 border-indigo-600" : "border-gray-300"} flex items-center justify-center`}
-                                >
-                                    {formData.hasContact && <span className="text-white text-xs">✓</span>}
+                                <div className="flex justify-between items-center pt-3 mt-2 border-t border-gray-300 font-medium">
+                                    <p>Total des services</p>
+                                    <p className="text-indigo-600 text-lg">{servicesCost.toLocaleString()} FCFA</p>
                                 </div>
-                                <p className="ml-3">Contact dans le pays</p>
                             </div>
-
-                            {formData.hasContact && formData.contactDetails && (
-                                <div className="ml-8 mt-2 p-2 bg-white rounded border border-gray-200">
-                                    <p className="text-sm">{formData.contactDetails}</p>
-                                </div>
-                            )}
-                        </div>
+                        ) : (
+                            <p className="text-gray-500 italic">Aucun service complémentaire sélectionné</p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -152,7 +157,7 @@ export default function SummaryForm({ formData, prevStep, mockData }) {
                 <div className="space-x-4">
                     {isSubmitted ? (
                         <PDFDownloadLink
-                            document={<PDFDocument formData={formData} />}
+                            document={<PDFDocument formData={formData} mockData={mockData} />}
                             fileName={`inscription_${formData.lastName}_${formData.firstName}.pdf`}
                             className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
@@ -173,4 +178,9 @@ export default function SummaryForm({ formData, prevStep, mockData }) {
         </div>
     )
 }
+
+
+
+
+
 

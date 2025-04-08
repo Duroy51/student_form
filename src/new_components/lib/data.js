@@ -1,0 +1,62 @@
+// Données simulées pour l'application
+export const mockData = {
+    countries: ["France", "Canada", "Belgique", "Suisse", "Maroc", "Sénégal"],
+    universities: {
+        France: ["Université Paris-Sorbonne", "École Polytechnique", "Sciences Po Paris"],
+        Canada: ["Université de Montréal", "McGill University", "Université Laval"],
+        Belgique: ["Université Libre de Bruxelles", "Université de Liège", "KU Leuven"],
+        Suisse: ["ETH Zurich", "Université de Genève", "EPFL"],
+        Maroc: ["Université Mohammed V", "Université Hassan II", "ENSA"],
+        Sénégal: ["Université Cheikh Anta Diop", "Université Gaston Berger", "ISM Dakar"],
+    },
+    fields: {
+        "Université Paris-Sorbonne": ["Lettres", "Histoire", "Philosophie", "Droit"],
+        "École Polytechnique": ["Mathématiques", "Physique", "Informatique", "Génie Civil"],
+        "Sciences Po Paris": ["Sciences Politiques", "Relations Internationales", "Économie"],
+        "Université de Montréal": ["Médecine", "Informatique", "Psychologie", "Économie"],
+        "McGill University": ["Génie", "Commerce", "Médecine", "Droit"],
+        "Université Laval": ["Agriculture", "Foresterie", "Sciences Sociales", "Éducation"],
+        "Université Libre de Bruxelles": ["Droit", "Économie", "Sciences Sociales", "Médecine"],
+        "Université de Liège": ["Ingénierie", "Sciences", "Médecine Vétérinaire", "Psychologie"],
+        "KU Leuven": ["Ingénierie", "Sciences", "Médecine", "Économie et Gestion"],
+        "ETH Zurich": ["Ingénierie", "Architecture", "Sciences Naturelles", "Informatique"],
+        "Université de Genève": ["Relations Internationales", "Droit", "Médecine", "Sciences"],
+        EPFL: ["Informatique", "Génie Civil", "Microtechnique", "Sciences de la Vie"],
+        "Université Mohammed V": ["Droit", "Économie", "Médecine", "Sciences"],
+        "Université Hassan II": ["Commerce", "Sciences", "Lettres", "Ingénierie"],
+        ENSA: ["Génie Civil", "Génie Électrique", "Génie Informatique", "Architecture"],
+        "Université Cheikh Anta Diop": ["Médecine", "Pharmacie", "Sciences", "Lettres"],
+        "Université Gaston Berger": ["Économie", "Droit", "Lettres", "Sciences Appliquées"],
+        "ISM Dakar": ["Management", "Finance", "Marketing", "Informatique"],
+    },
+    accommodations: [
+        { type: "Chambre Simple", capacity: "1 personne", price: 150000 },
+        { type: "Chambre Double", capacity: "2 personnes", price: 100000 },
+        { type: "Studio", capacity: "1 personne", price: 250000 },
+        { type: "Appartement T1", capacity: "1-2 personnes", price: 350000 },
+        { type: "Appartement T2", capacity: "2-3 personnes", price: 450000 },
+        { type: "Résidence Universitaire", capacity: "1 personne", price: 80000 },
+    ],
+    additionalServices: [
+        {
+            id: "passport",
+            name: "Passeport",
+            description: "Aide à l'obtention d'un passeport",
+            price: 50000,
+        },
+        {
+            id: "translation",
+            name: "Traduction",
+            description: "Traduction de vos certificats et diplômes",
+            price: 30000,
+        },
+        {
+            id: "airport",
+            name: "N'avez vous pas de contact à l'aéroport ?",
+            description: "Si vous n'avez pas de contact nous pouvons vous offrir notre service et un suivi de 1 à 6 ans",
+            price: 300000,
+        },
+    ],
+    studyLevels: ["Licence", "Master", "Doctorat"],
+}
+

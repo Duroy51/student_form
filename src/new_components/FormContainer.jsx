@@ -9,47 +9,8 @@ import AccommodationForm from "./form_steep/AccomodationForm.jsx"
 import AdditionalServicesForm from "./form_steep/AdditionalServiceForm.jsx"
 import SummaryForm from "./form_steep/SummuryForm.jsx"
 import StepIndicator from "./SteepIndicator.jsx"
+import { mockData } from "./lib/data"
 
-// Données simulées pour les pays, universités, filières, etc.
-const mockData = {
-    countries: ["France", "Canada", "Belgique", "Suisse", "Maroc", "Sénégal"],
-    universities: {
-        France: ["Université Paris-Sorbonne", "École Polytechnique", "Sciences Po Paris"],
-        Canada: ["Université de Montréal", "McGill University", "Université Laval"],
-        Belgique: ["Université Libre de Bruxelles", "Université de Liège", "KU Leuven"],
-        Suisse: ["ETH Zurich", "Université de Genève", "EPFL"],
-        Maroc: ["Université Mohammed V", "Université Hassan II", "ENSA"],
-        Sénégal: ["Université Cheikh Anta Diop", "Université Gaston Berger", "ISM Dakar"],
-    },
-    fields: {
-        "Université Paris-Sorbonne": ["Lettres", "Histoire", "Philosophie", "Droit"],
-        "École Polytechnique": ["Mathématiques", "Physique", "Informatique", "Génie Civil"],
-        "Sciences Po Paris": ["Sciences Politiques", "Relations Internationales", "Économie"],
-        "Université de Montréal": ["Médecine", "Informatique", "Psychologie", "Économie"],
-        "McGill University": ["Génie", "Commerce", "Médecine", "Droit"],
-        "Université Laval": ["Agriculture", "Foresterie", "Sciences Sociales", "Éducation"],
-        "Université Libre de Bruxelles": ["Droit", "Économie", "Sciences Sociales", "Médecine"],
-        "Université de Liège": ["Ingénierie", "Sciences", "Médecine Vétérinaire", "Psychologie"],
-        "KU Leuven": ["Ingénierie", "Sciences", "Médecine", "Économie et Gestion"],
-        "ETH Zurich": ["Ingénierie", "Architecture", "Sciences Naturelles", "Informatique"],
-        "Université de Genève": ["Relations Internationales", "Droit", "Médecine", "Sciences"],
-        EPFL: ["Informatique", "Génie Civil", "Microtechnique", "Sciences de la Vie"],
-        "Université Mohammed V": ["Droit", "Économie", "Médecine", "Sciences"],
-        "Université Hassan II": ["Commerce", "Sciences", "Lettres", "Ingénierie"],
-        ENSA: ["Génie Civil", "Génie Électrique", "Génie Informatique", "Architecture"],
-        "Université Cheikh Anta Diop": ["Médecine", "Pharmacie", "Sciences", "Lettres"],
-        "Université Gaston Berger": ["Économie", "Droit", "Lettres", "Sciences Appliquées"],
-        "ISM Dakar": ["Management", "Finance", "Marketing", "Informatique"],
-    },
-    accommodations: [
-        { type: "Chambre Simple", capacity: "1 personne", price: 150000 },
-        { type: "Chambre Double", capacity: "2 personnes", price: 100000 },
-        { type: "Studio", capacity: "1 personne", price: 250000 },
-        { type: "Appartement T1", capacity: "1-2 personnes", price: 350000 },
-        { type: "Appartement T2", capacity: "2-3 personnes", price: 450000 },
-        { type: "Résidence Universitaire", capacity: "1 personne", price: 80000 },
-    ],
-}
 
 export default function FormContainer() {
     const [currentStep, setCurrentStep] = useState(1)
@@ -74,10 +35,7 @@ export default function FormContainer() {
         accommodation: null,
 
         // Étape 4: Services complémentaires
-        needPassport: false,
-        needTranslation: false,
-        hasContact: false,
-        contactDetails: "",
+        selectedServices: [],
     })
 
     const [errors, setErrors] = useState({})
@@ -188,6 +146,24 @@ export default function FormContainer() {
         })
     }
 
+    const handleServiceToggle = (serviceId) => {
+        const currentServices = [...formData.selectedServices]
+
+        if (currentServices.includes(serviceId)) {
+            // Retirer le service s'il est déjà sélectionné
+            setFormData({
+                ...formData,
+                selectedServices: currentServices.filter((id) => id !== serviceId),
+            })
+        } else {
+            // Ajouter le service s'il n'est pas déjà sélectionné
+            setFormData({
+                ...formData,
+                selectedServices: [...currentServices, serviceId],
+            })
+        }
+    }
+
     const renderStep = () => {
         switch (currentStep) {
             case 1:
@@ -218,9 +194,10 @@ export default function FormContainer() {
                 return (
                     <AdditionalServicesForm
                         formData={formData}
-                        handleChange={handleChange}
+                        handleServiceToggle={handleServiceToggle}
                         nextStep={nextStep}
                         prevStep={prevStep}
+                        services={mockData.additionalServices}
                     />
                 )
             case 5:
@@ -248,4 +225,7 @@ export default function FormContainer() {
         </div>
     )
 }
+
+
+
 
