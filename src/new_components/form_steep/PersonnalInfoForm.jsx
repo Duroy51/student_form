@@ -3,6 +3,27 @@ import moment from 'moment';
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'moment/locale/fr'; // Importation du français
+
+moment.locale('fr');
+
+const CalendarButton = ({ onClick }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      className="absolute inset-y-0 right-0 flex items-center px-3 border-l bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-indigo-600 transition-colors"
+      aria-label="Ouvrir le calendrier"
+    >
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        className="h-5 w-5" 
+        viewBox="0 0 20 20" 
+        fill="currentColor"
+      >
+        <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+      </svg>
+    </button>
+  );
 
 export default function PersonalInfoForm({ formData, handleChange, nextStep, errors }) {
     // On initialise l'état local pour la date à partir de formData.birthDate
@@ -21,18 +42,19 @@ export default function PersonalInfoForm({ formData, handleChange, nextStep, err
     const autoFormatDate = (value) => {
         // Nettoyage des caractères non numériques
         const cleaned = value.replace(/\D/g, '');
-        
+        const match = cleaned.match(/^(\d{0,2})(\d{0,2})(\d{0,4})$/);  
         // Formatage automatique pendant la saisie
-        if (cleaned.length <= 2) {
-            return cleaned;
-        } else if (cleaned.length <= 4) {
-            return `${cleaned.slice(0,2)}/${cleaned.slice(2)}`;
-        } else if (cleaned.length <= 6) {
-            return `${cleaned.slice(0,2)}/${cleaned.slice(2,4)}/${cleaned.slice(4)}`;
-        } else {
-            return `${cleaned.slice(0,2)}/${cleaned.slice(2,4)}/${cleaned.slice(4,8)}`;
+        if (match) {
+            let formatted = [];
+            if (match[1]) formatted.push(match[1]);
+            if (match[2]) formatted.push(match[2]);
+            if (match[3]) formatted.push(match[3]);
+            
+            return formatted.join('/').substr(0, 10);
         }
+        return '';
     };
+    
     const handleTextChange = (e) => {
         const rawValue = e.target.value;
         const formattedValue = autoFormatDate(rawValue);
@@ -53,7 +75,7 @@ export default function PersonalInfoForm({ formData, handleChange, nextStep, err
             setDateError('');
         } else {
             handleChange({ target: { name: "birthDate", value: '' } });
-            setDateError(rawValue.length >= 2 ? 'Format de date invalide' : '');
+            setDateError(rawValue.length >= 2 ? 'Date invalide ou future' : '');
             setStartDate(null);
         }
     };
@@ -136,31 +158,68 @@ export default function PersonalInfoForm({ formData, handleChange, nextStep, err
                             name="birthDate"
                             value={inputValue}
                             onChange={handleTextChange}
-                            className={`w-full px-4 py-2 border ${dateError || errors.birthDate ? "border-red-500" : "border-gray-300"} rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                            placeholder="JJ/MM/AAAA, JJ-MM-AAAA..."
+                            className={`w-full px-4 py-2 pr-12 border ${dateError || errors.birthDate ? "border-red-500" : "border-gray-300"} rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+                            placeholder="JJ/MM/AAAA ou JJMMAAAA"
                             autoComplete="off"
+                            inputMode="numeric"
                         />
-                        <DatePicker
+                                     <DatePicker
                             selected={startDate}
                             onChange={handleDateChange}
-                            customInput={
-                                <button
-                                    type="button"
-                                    className="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-indigo-500"
-                                    aria-label="Ouvrir le calendrier"
-                                >
-                                    ⌄
-                                </button>
-                            }
+                            customInput={<CalendarButton />}
                             popperClassName="z-50"
                             calendarClassName="bg-white p-4 shadow-lg rounded-lg"
+                            showMonthDropdown
+                            showYearDropdown
+                            dropdownMode="select"
+                            yearDropdownItemNumber={70}
+                            scrollableYearDropdown
+                            maxDate={new Date()}
+                            minDate={moment().subtract(100, 'years').toDate()}
+                            dateFormat="dd/MM/yyyy"
+                            locale="fr"
+                            renderCustomHeader={({
+                                date,
+                                changeYear,
+                                changeMonth,
+                                decreaseMonth,
+                                increaseMonth,
+                                prevMonthButtonDisabled,
+                                nextMonthButtonDisabled,
+                            }) => (
+                                <div className="flex justify-between px-4 py-2">
+                                    <select
+                                        value={moment(date).format("YYYY")}
+                                        onChange={({ target: { value } }) => changeYear(value)}
+                                        className="px-2 rounded bg-white border"
+                                    >
+                                        {Array.from({ length: 100 }, (_, i) => moment().year() - i).map((year) => (
+                                            <option key={year} value={year}>
+                                                {year}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    
+                                    <select
+                                        value={moment(date).format("MM")}
+                                        onChange={({ target: { value } }) => changeMonth(value)}
+                                        className="px-2 rounded bg-white border ml-2"
+                                    >
+                                        {moment.months().map((month, index) => (
+                                            <option key={month} value={index}>
+                                                {month}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
                         />
                     </div>
                     {(dateError || errors.birthDate) && (
                         <p className="mt-1 text-sm text-red-600">{dateError || errors.birthDate}</p>
                     )}
                     <div className="mt-1 text-xs text-gray-500">
-                        Formats acceptés : JJ/MM/AAAA, JJ-MM-AAAA, JJ.MM.AAAA
+                    Saisie libre : 31122000 → 31/12/2000
                     </div>
                 </div>
                 <div>
