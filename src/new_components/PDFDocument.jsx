@@ -1,62 +1,64 @@
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import React from 'react';
 
-// Palette de couleurs modernes
+// Palette de couleurs professionnelles
 const COLORS = {
-    primary: '#2D3748',
-    secondary: '#4F46E5',
-    accent: '#6366F1',
-    lightGray: '#F7FAFC',
-    darkGray: '#718096',
-    text: '#2D3748'
+    primary: '#1E40AF',      // Bleu plus professionnel
+    secondary: '#3B82F6',    // Bleu plus clair pour accent
+    accent: '#93C5FD',       // Bleu très clair pour fond d'accent
+    lightGray: '#F8FAFC',    // Gris très clair pour fonds
+    mediumGray: '#E2E8F0',   // Gris moyen pour bordures
+    darkGray: '#64748B',     // Gris foncé pour texte secondaire
+    text: '#1E293B',         // Presque noir pour texte principal
+    white: '#FFFFFF'         // Blanc
 }
 
 const styles = StyleSheet.create({
     page: {
-        padding: 40,
-        fontFamily: "Helvetica-Bold",
-        backgroundColor: '#FFFFFF'
+        padding: 30,
+        fontFamily: "Helvetica",
+        backgroundColor: COLORS.white,
+        color: COLORS.text
     },
     header: {
-        marginBottom: 25,
-        paddingBottom: 15,
+        marginBottom: 20,
+        paddingBottom: 10,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        borderBottom: `2 solid ${COLORS.secondary}`
+        borderBottom: `2 solid ${COLORS.primary}`
     },
     headerLeft: {
         flex: 1
     },
     title: {
-        fontSize: 26,
-        fontWeight: 'black',
+        fontSize: 22,
+        fontFamily: "Helvetica-Bold",
         color: COLORS.primary,
-        letterSpacing: 1
-    },
-    subtitle: {
-        fontSize: 10,
-        color: COLORS.darkGray,
-        marginTop: 4,
         letterSpacing: 0.5
     },
+    subtitle: {
+        fontSize: 9,
+        color: COLORS.darkGray,
+        marginTop: 4
+    },
     section: {
-        marginBottom: 20,
+        marginBottom: 15,
         backgroundColor: COLORS.lightGray,
-        borderRadius: 4,
-        padding: 15,
-        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+        borderRadius: 5,
+        padding: 12,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.08)'
     },
     sectionTitle: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        marginBottom: 12,
-        color: COLORS.secondary,
+        fontSize: 12,
+        fontFamily: "Helvetica-Bold",
+        marginBottom: 10,
+        color: COLORS.primary,
         textTransform: 'uppercase',
-        letterSpacing: 0.8,
-        paddingBottom: 4,
-        borderBottom: `1 solid ${COLORS.secondary}`
+        letterSpacing: 0.5,
+        paddingBottom: 3,
+        borderBottom: `1 solid ${COLORS.accent}`
     },
     row: {
         flexDirection: "row",
@@ -68,44 +70,54 @@ const styles = StyleSheet.create({
         paddingRight: 10
     },
     label: {
-        fontSize: 9,
+        fontSize: 8,
         color: COLORS.darkGray,
-        fontWeight: 'bold',
+        fontFamily: "Helvetica-Bold",
         textTransform: 'uppercase',
-        marginBottom: 3
+        marginBottom: 2
     },
     value: {
-        fontSize: 12,
+        fontSize: 10,
         color: COLORS.text,
-        fontWeight: 'semibold'
+        fontFamily: "Helvetica"
     },
     serviceRow: {
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingVertical: 8,
-        borderBottom: `1 solid ${COLORS.lightGray}`
+        paddingVertical: 6,
+        borderBottom: `0.5 solid ${COLORS.mediumGray}`
     },
     serviceName: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: COLORS.primary
+        fontSize: 10,
+        fontFamily: "Helvetica-Bold",
+        color: COLORS.text
     },
     servicePrice: {
-        fontSize: 12,
-        fontWeight: 'bold',
+        fontSize: 10,
+        fontFamily: "Helvetica-Bold",
         color: COLORS.secondary
     },
     totalRow: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginTop: 15,
-        paddingTop: 12,
-        borderTop: `2 solid ${COLORS.secondary}`
+        marginTop: 12,
+        paddingTop: 8,
+        borderTop: `1 solid ${COLORS.secondary}`
+    },
+    totalLabel: {
+        fontSize: 10,
+        fontFamily: "Helvetica-Bold",
+        color: COLORS.text
+    },
+    totalValue: {
+        fontSize: 11,
+        fontFamily: "Helvetica-Bold",
+        color: COLORS.primary
     },
     signatureSection: {
-        marginTop: 30,
-        paddingTop: 20,
-        borderTop: `2 dashed ${COLORS.darkGray}`
+        marginTop: 20,
+        paddingTop: 15,
+        borderTop: `1 dashed ${COLORS.mediumGray}`
     },
     signatureBox: {
         height: 40,
@@ -115,28 +127,41 @@ const styles = StyleSheet.create({
     },
     footer: {
         position: "absolute",
-        bottom: 25,
-        left: 0,
-        right: 0,
+        bottom: 20,
+        left: 30,
+        right: 30,
         textAlign: "center",
         fontSize: 8,
         color: COLORS.darkGray,
         paddingVertical: 8,
-        backgroundColor: COLORS.lightGray
-    },
-    logo: {
-        width: 80,
-        height: 80,
-        marginRight: 15
+        borderTop: `0.5 solid ${COLORS.mediumGray}`,
+        paddingTop: 10
     },
     watermark: {
         position: 'absolute',
-        opacity: 0.1,
-        fontSize: 72,
+        opacity: 0.04,
+        fontSize: 60,
         color: COLORS.primary,
         transform: 'rotate(-45deg)',
         left: 100,
         top: 400
+    },
+    highlightedValue: {
+        fontSize: 10,
+        color: COLORS.primary,
+        fontFamily: "Helvetica-Bold"
+    },
+    infoPanel: {
+        backgroundColor: COLORS.accent,
+        opacity: 0.7,
+        padding: 8,
+        borderRadius: 4,
+        marginBottom: 10
+    },
+    infoPanelText: {
+        fontSize: 8,
+        fontFamily: "Helvetica",
+        color: COLORS.primary
     }
 });
 
@@ -150,8 +175,16 @@ const PDFDocument = ({ formData, mockData }) => (
             <View style={styles.header}>
                 <View style={styles.headerLeft}>
                     <Text style={styles.title}>FICHE D'INSCRIPTION</Text>
-                    <Text style={styles.subtitle}>DOCUMENT OFFICIEL - N°REF: {Math.random().toString(36).substr(2, 9).toUpperCase()}</Text>
+                    <Text style={styles.subtitle}>N°REF: {Math.random().toString(36).substr(2, 9).toUpperCase()}</Text>
                 </View>
+            </View>
+
+            {/* Bannière d'information */}
+            <View style={styles.infoPanel}>
+                <Text style={styles.infoPanelText}>
+                    Ce document contient vos informations personnelles d'inscription.
+                    Veuillez vérifier l'exactitude de toutes les données avant signature.
+                </Text>
             </View>
 
             {/* Sections améliorées */}
@@ -160,7 +193,7 @@ const PDFDocument = ({ formData, mockData }) => (
                 <View style={styles.row}>
                     <View style={styles.column}>
                         <Text style={styles.label}>Identité</Text>
-                        <Text style={styles.value}>{formData.firstName} {formData.lastName}</Text>
+                        <Text style={styles.highlightedValue}>{formData.firstName} {formData.lastName}</Text>
                     </View>
                     <View style={styles.column}>
                         <Text style={styles.label}>Date/Lieu de Naissance</Text>
@@ -170,13 +203,22 @@ const PDFDocument = ({ formData, mockData }) => (
 
                 <View style={styles.row}>
                     <View style={styles.column}>
-                        <Text style={styles.label}>Contacts</Text>
+                        <Text style={styles.label}>Email</Text>
                         <Text style={styles.value}>{formData.email}</Text>
+                    </View>
+                    <View style={styles.column}>
+                        <Text style={styles.label}>Téléphone</Text>
                         <Text style={styles.value}>{formData.phone}</Text>
                     </View>
+                </View>
+
+                <View style={styles.row}>
                     <View style={styles.column}>
                         <Text style={styles.label}>Responsable Légal</Text>
                         <Text style={styles.value}>{formData.parentName}</Text>
+                    </View>
+                    <View style={styles.column}>
+                        <Text style={styles.label}>Contact Responsable</Text>
                         <Text style={styles.value}>{formData.parentContact}</Text>
                     </View>
                 </View>
@@ -184,15 +226,15 @@ const PDFDocument = ({ formData, mockData }) => (
 
             {/* Section Programme */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Détails du Programme</Text>
+                <Text style={styles.sectionTitle}>Programme d'Études</Text>
                 <View style={styles.row}>
                     <View style={styles.column}>
                         <Text style={styles.label}>Destination</Text>
-                        <Text style={styles.value}>{formData.country}</Text>
+                        <Text style={styles.highlightedValue}>{formData.country}</Text>
                     </View>
                     <View style={styles.column}>
                         <Text style={styles.label}>Établissement</Text>
-                        <Text style={styles.value}>{formData.university}</Text>
+                        <Text style={styles.highlightedValue}>{formData.university}</Text>
                     </View>
                 </View>
 
@@ -210,15 +252,21 @@ const PDFDocument = ({ formData, mockData }) => (
 
             {/* Section Hébergement */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Détails de l'Hébergement</Text>
+                <Text style={styles.sectionTitle}>Hébergement</Text>
                 <View style={styles.row}>
                     <View style={styles.column}>
+                        <Text style={styles.label}>Type</Text>
                         <Text style={styles.value}>{formData.accommodation?.type}</Text>
-                        <Text style={[styles.label, {marginTop: 5}]}>Capacité: {formData.accommodation?.capacity}</Text>
                     </View>
                     <View style={styles.column}>
+                        <Text style={styles.label}>Capacité</Text>
+                        <Text style={styles.value}>{formData.accommodation?.capacity}</Text>
+                    </View>
+                </View>
+                <View style={styles.row}>
+                    <View style={styles.column}>
                         <Text style={styles.label}>Coût Mensuel</Text>
-                        <Text style={[styles.value, {color: COLORS.secondary}]}>
+                        <Text style={styles.highlightedValue}>
                             {formData.accommodation?.price?.toLocaleString()} FCFA
                         </Text>
                     </View>
@@ -241,7 +289,7 @@ const PDFDocument = ({ formData, mockData }) => (
                         })}
                         <View style={styles.totalRow}>
                             <Text style={styles.totalLabel}>Total Services</Text>
-                            <Text style={[styles.totalValue, {color: COLORS.secondary}]}>
+                            <Text style={styles.totalValue}>
                                 {formData.selectedServices
                                     .reduce((total, serviceId) => total +
                                         (mockData.additionalServices.find(s => s.id === serviceId)?.price || 0), 0)
@@ -256,8 +304,8 @@ const PDFDocument = ({ formData, mockData }) => (
 
             {/* Signature */}
             <View style={styles.signatureSection}>
-                <Text style={[styles.label, {marginBottom: 15}]}>
-                    Déclaration sur l'honneur - Je certifie l'exactitude des informations fournies.
+                <Text style={[styles.label, {marginBottom: 10}]}>
+                    Je certifie sur l'honneur l'exactitude des informations fournies.
                 </Text>
                 <View style={styles.row}>
                     <View style={styles.column}>
@@ -274,7 +322,7 @@ const PDFDocument = ({ formData, mockData }) => (
             {/* Pied de page */}
             <View style={styles.footer}>
                 <Text>Agence d'Études à l'Étranger • contact@agence-etranger.com • +33 1 23 45 67 89</Text>
-                <Text>Imprimé le {new Date().toLocaleDateString()} • Document protégé par droits d'auteur</Text>
+                <Text>Document généré le {new Date().toLocaleDateString()}</Text>
             </View>
         </Page>
     </Document>
