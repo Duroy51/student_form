@@ -79,7 +79,7 @@ export default function ProgramSelectionForm({ formData, handleChange, nextStep,
 
             try {
                 const res = await fetch(
-                    `http://universities.hipolabs.com/search?country=${encodeURIComponent(formData.country)}`
+                    `https://universities.hipolabs.com/search?country=${encodeURIComponent(formData.country)}`
                 );
 
                 // Clear the timeout as we got a response
